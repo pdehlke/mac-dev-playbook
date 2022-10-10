@@ -1,8 +1,18 @@
 ---
 - hosts: all
 
+  gather_facts: true
+
   vars_files:
     - default.config.yml
+
+  vars_prompt:
+    - name: name
+      prompt: Your full name for git commits
+      private: no
+    - name: email
+      prompt: your email address for git commits
+      private: no
 
   pre_tasks:
     - name: Include playbook configuration.
@@ -15,9 +25,6 @@
     - role: elliotweiser.osx-command-line-tools
     - role: geerlingguy.mac.homebrew
       tags: ['homebrew']
-    - role: geerlingguy.dotfiles
-      when: configure_dotfiles
-      tags: ['dotfiles']
     - role: geerlingguy.mac.mas
       when: mas_installed_apps or mas_installed_app_ids
       tags: ['mas']
@@ -26,6 +33,10 @@
       tags: ['dock']
 
   tasks:
+    - import_tasks: tasks/dotfiles.yml
+      when: configure_dotfiles
+      tags: ['dotfiles']
+
     - import_tasks: tasks/sudoers.yml
       when: configure_sudoers
       tags: ['sudoers']

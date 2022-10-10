@@ -1,0 +1,21 @@
+---
+- name: Pre-configure chezmoi
+  file:
+    path: "{{ ansible_env.HOME }}/.config/chezmoi"
+    state: directory
+
+- name: Set up chezmoi
+  template:
+    src: templates/chezmoi.yaml.j2
+    dest: "{{ ansible_env.HOME }}/.config/chezmoi/chezmoi.yaml"
+
+- name: Ensure dotfiles repository is cloned locally.
+  git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_repo_local_destination }}"
+    accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
+  become: false
+
+- name: Postprocess dotfiles
+  command: "{{ dotfiles_install_command }}"
+  when: dotfiles_install_command is defined
