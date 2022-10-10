@@ -31,6 +31,9 @@
     - role: geerlingguy.mac.dock
       when: configure_dock
       tags: ['dock']
+    - role: markosamuli.pyenv
+      when: install_pyenv
+      tags: ['pyenv']
 
   tasks:
     - import_tasks: tasks/dotfiles.yml

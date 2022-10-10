@@ -5,6 +5,24 @@ configure_dotfiles: true
 configure_terminal: true
 configure_osx: true
 
+# make sure pyenv is installed and add default versions
+install_pyenv: true
+# yadr handles this; don't set up the shell
+pyenv_init_shell: false
+pyenv_python27_version: "2.7.18"
+pyenv_python39_version: "3.9.11"
+pyenv_python310_version: "3.10.3"
+# Python versions to install. We need 2.x for cqlsh
+# until we move to cassandra 4 :(
+pyenv_python_versions:
+  - "{{ pyenv_python27_version }}"
+  - "{{ pyenv_python39_version }}"
+  - "{{ pyenv_python310_version }}"
+
+# Set global pyenv version
+pyenv_global: "{{ pyenv_python39_version }} system"
+
+
 # Set to 'true' to configure the Dock via dockutil.
 configure_dock: true
 dockitems_remove:
