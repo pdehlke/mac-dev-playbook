@@ -269,7 +269,6 @@ cask "viscosity"
 cask "visual-studio-code"
 cask "vlc"
 cask "webstorm"
-cask "yubico-yubikey-manager"
 cask "zoom"
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
