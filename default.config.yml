@@ -4,6 +4,7 @@ downloads: ~/.ansible-downloads/
 configure_dotfiles: true
 configure_terminal: true
 configure_osx: true
+homebrew_brewfile_dir: "{{ playbook_dir }}"
 
 # make sure pyenv is installed and add default versions
 install_pyenv: true
@@ -58,52 +59,53 @@ dotfiles_repo_accept_hostkey: true
 dotfiles_repo_local_destination: ~/.yadr
 dotfiles_install_command: "~/.yadr/install.sh"
 
-homebrew_installed_packages:
-  # - ansible # Installed via Pip.
-  - autoconf
-  - bash-completion
-  - doxygen
-  - gettext
-  - gifsicle
-  - git
-  - github/gh/gh
-  - go
-  - gpg
-  - httpie
-  - iperf
-  - libevent
-  - sqlite
-  - mcrypt
-  - nmap
-  - node
-  - nvm
-  - php
-  - ssh-copy-id
-  - cowsay
-  - readline
-  - openssl
-  - pv
-  - wget
-  - wrk
-  - zsh-history-substring-search
+# These have been moved to the local Brewfile
+# homebrew_installed_packages:
+#   # - ansible # Installed via Pip.
+#   - autoconf
+#   - bash-completion
+#   - doxygen
+#   - gettext
+#   - gifsicle
+#   - git
+#   - github/gh/gh
+#   - go
+#   - gpg
+#   - httpie
+#   - iperf
+#   - libevent
+#   - sqlite
+#   - mcrypt
+#   - nmap
+#   - node
+#   - nvm
+#   - php
+#   - ssh-copy-id
+#   - cowsay
+#   - readline
+#   - openssl
+#   - pv
+#   - wget
+#   - wrk
+#   - zsh-history-substring-search
 
-homebrew_taps:
-  - homebrew/core
-  - homebrew/cask
+# homebrew_taps:
+#   - homebrew/core
+#   - homebrew/cask
 
 homebrew_cask_appdir: /Applications
-homebrew_cask_apps:
-  - chromedriver
-  - docker
-  - dropbox
-  - firefox
-  - google-chrome
-  - handbrake
-  - licecap
-  - sequel-ace
-  - slack
-  - sublime-text
-  - transmit
+# homebrew_cask_apps:
+#   - chromedriver
+#   - docker
+#   - dropbox
+#   - firefox
+#   - google-chrome
+#   - handbrake
+#   - licecap
+#   - sequel-ace
+#   - slack
+#   - sublime-text
+#   - transmit
 
 # See `geerlingguy.mas` role documentation for usage instructions.
 mas_installed_apps: []
@@ -192,4 +194,5 @@ sublime_package_control:
   - "ZSH"
 
 # Glob pattern to ansible task files to run after all other tasks are finished.
-post_provision_tasks: []
+post_provision_tasks:
+  - "tasks/postprovision.yml"

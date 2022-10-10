@@ -1,0 +1,5 @@
+- name: Let zsh compinit work
+  file:
+    path: "/opt/homebrew/share"
+    state: directory
+    mode: "g=rx"
