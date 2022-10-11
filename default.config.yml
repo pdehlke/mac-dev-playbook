@@ -49,6 +49,15 @@ dockitems_persist:
   - name: "WebStorm"
     path: "/Applications/WebStorm.app"
     pos: 7
+  - name: "iTerm"
+    path: "/Applications/iTerm.app"
+    pos: 8
+  - name: "zoom"
+    path: "/Applications/zoom.us.app"
+    pos: 9
+  - name: "Slack"
+    path: "/Applications/Slack.app"
+    pos: 10
 
 configure_sudoers: false
 sudoers_custom_config: ''
@@ -199,3 +208,4 @@ sublime_package_control:
 # Glob pattern to ansible task files to run after all other tasks are finished.
 post_provision_tasks:
   - "tasks/postprovision.yml"
+
