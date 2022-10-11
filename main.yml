@@ -6,11 +6,14 @@
   vars_files:
     - default.config.yml
 
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin"
+
   vars_prompt:
-    - name: name
+    - name: yourname
       prompt: Your full name for git commits
       private: no
-    - name: email
+    - name: youremail
       prompt: your email address for git commits
       private: no
 
