@@ -38,8 +38,14 @@
 - name: memcached symlink
   ansible.builtin.file:
     src: "{{ abvprp_base_path }}/memcached-{{ memcache_version }}"
-    dest: "{{ abvprp_base_path }}/memcache"
+    dest: "{{ abvprp_base_path }}/memcached"
     state: link
+
+- name: Build memcached
+  shell: "./configure --silent --with-libevent=$(brew info libevent  | grep $(brew --prefix) | awk '{print $1}') && make"
+  args:
+    chdir: "{{ abvprp_base_path }}/memcached"
+    creates: "{{ abvprp_base_path }}/memcached/memcached"
 
 - name: Install tomcat
   ansible.builtin.unarchive:
