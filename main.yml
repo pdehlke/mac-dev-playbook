@@ -59,6 +59,10 @@
       when: configure_sublime
       tags: ['sublime-text']
 
+    - import_tasks: tasks/abvprp.yml
+      when: install_abvprp_deps
+      tags: ['abvprp_deps']
+
     - block:
         - name: Run configured post-provision ansible task files.
           include_tasks: "{{ outer_item }}"

@@ -209,3 +209,20 @@ sublime_package_control:
 post_provision_tasks:
   - "tasks/postprovision.yml"
 
+# Above Property dependencies
+#
+install_abvprp_deps: true
+create_abvprp_symlinks: true
+abvprp_base_path: "/opt/abvprp"
+apache_mirror: https://archive.apache.org/dist/
+
+maven_version: "3.3.3"
+cassandra_version: "3.11.12"
+zookeeper_version: "3.4.6"
+solr_version: "5.2.1"
+memcache_version: "1.6.10"
+tomcat_version: "8.0.35"
+spark_version: "1.6.0"
+Spark_connector_version: "SPARKC-341"
+kafka_version: "0.10.0.0"
+kafka_scala_version: "2.11"

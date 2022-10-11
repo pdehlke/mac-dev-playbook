@@ -1,0 +1,123 @@
+---
+- name: Ensure base directories exist.
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ abvprp_base_path }}"
+    - "{{ abvprp_base_path }}/bin"
+    - "{{ abvprp_base_path }}/etc"
+    - "{{ abvprp_base_path }}/lib"
+    - "{{ abvprp_base_path }}/data"
+    - "{{ abvprp_base_path }}/data/cassandra"
+    - "{{ abvprp_base_path }}/data/solr"
+
+# This should be refactored but getting the loops and creates
+# right seems... difficult.
+
+- name: Install zookeeper
+  ansible.builtin.unarchive:
+    src: "{{ apache_mirror }}/zookeeper/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
+    dest: "{{ abvprp_base_path }}"
+    remote_src: yes
+    creates: "{{ abvprp_base_path }}/zookeeper-{{ zookeeper_version }}/bin/zkServer.sh"
+
+- name: ZK symlink
+  ansible.builtin.file:
+    src: "{{ abvprp_base_path }}/zookeeper-{{ zookeeper_version }}"
+    dest: "{{ abvprp_base_path }}/zookeeper"
+    state: link
+
+- name: Install memcached
+  ansible.builtin.unarchive:
+    src: "http://www.memcached.org/files/memcached-{{ memcache_version }}.tar.gz"
+    dest: "{{ abvprp_base_path }}"
+    remote_src: yes
+    creates: "{{ abvprp_base_path }}/memcached-{{ memcache_version }}/AUTHORS"
+
+- name: memcached symlink
+  ansible.builtin.file:
+    src: "{{ abvprp_base_path }}/memcached-{{ memcache_version }}"
+    dest: "{{ abvprp_base_path }}/memcache"
+    state: link
+
+- name: Install tomcat
+  ansible.builtin.unarchive:
+    src: "{{ apache_mirror }}/tomcat/tomcat-8/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+    dest: "{{ abvprp_base_path }}"
+    remote_src: yes
+    creates: "{{ abvprp_base_path }}/apache-tomcat-{{ tomcat_version }}/bin/catalina.sh"
+
+- name: tomcat symlink
+  ansible.builtin.file:
+    src: "{{ abvprp_base_path }}/apache-tomcat-{{ tomcat_version }}"
+    dest: "{{ abvprp_base_path }}/apache-tomcat"
+    state: link
+
+- name: Install cassandra
+  ansible.builtin.unarchive:
+    src: "{{ apache_mirror }}/cassandra/{{ cassandra_version }}/apache-cassandra-{{ cassandra_version }}-bin.tar.gz"
+    dest: "{{ abvprp_base_path }}"
+    remote_src: yes
+    creates: "{{ abvprp_base_path }}/apache-cassandra-{{ cassandra_version }}/bin/cassandra"
+
+- name: remove libjna
+  file:
+    path: "{{ abvprp_base_path }}/apache-cassandra-{{ cassandra_version }}/lib/jna-4.2.2.jar"
+    state: absent
+  when: (cassandra_version | float < 4 )
+
+- name: Use a modern jna that supports arm64
+  get_url:
+    url: "https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.12.1/jna-5.12.1.jar"
+    dest: "{{ abvprp_base_path }}/apache-cassandra-{{ cassandra_version }}/lib/jna-5.12.1.jar"
+  when: (cassandra_version | float < 4 )
+
+- name: cassandra symlink
+  ansible.builtin.file:
+    src: "{{ abvprp_base_path }}/apache-cassandra-{{ cassandra_version }}"
+    dest: "{{ abvprp_base_path }}/apache-cassandra"
+    state: link
+
+- name: Install kafka
+  ansible.builtin.unarchive:
+    src: "{{ apache_mirror }}/kafka/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+    dest: "{{ abvprp_base_path }}"
+    remote_src: yes
+    creates: "{{ abvprp_base_path }}/kafka_{{ kafka_scala_version }}-{{ kafka_version}}/bin/kafka-server-start.sh"
+
+- name: kafka symlink
+  ansible.builtin.file:
+    src: "{{ abvprp_base_path }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}"
+    dest: "{{ abvprp_base_path }}/kafka"
+    state: link
+
+- name: Install solr
+  ansible.builtin.unarchive:
+    src: "{{ apache_mirror }}/lucene/solr/{{ solr_version }}/solr-{{ solr_version }}.tgz"
+    dest: "{{ abvprp_base_path }}"
+    remote_src: yes
+    creates: "{{ abvprp_base_path }}/solr-{{ solr_version }}/bin/solr"
+
+- name: solr symlink
+  ansible.builtin.file:
+    src: "{{ abvprp_base_path }}/solr-{{ solr_version }}"
+    dest: "{{ abvprp_base_path }}/solr"
+    state: link
+
+- name: Install spark
+  ansible.builtin.unarchive:
+    src: "{{ apache_mirror }}/spark/spark-{{ spark_version }}/spark-{{ spark_version }}.tgz"
+    dest: "{{ abvprp_base_path }}"
+    remote_src: yes
+    creates: "{{ abvprp_base_path }}/spark-{{ spark_version }}/bin/spark-shell"
+
+- name: spark symlink
+  ansible.builtin.file:
+    src: "{{ abvprp_base_path }}/spark-{{ spark_version }}"
+    dest: "{{ abvprp_base_path }}/spark"
+    state: link
+
+- name: Create bin symlinks
+  shell: "ln -fs {{ abvprp_base_path }}/*/bin/* {{ abvprp_base_path }}/bin"
+  when: create_abvprp_symlinks
